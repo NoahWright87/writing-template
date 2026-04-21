@@ -1,0 +1,53 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # Skip downloading bundled Chromium — use the system Chrome below instead.
+      - name: Install dependencies
+        run: npm ci
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
+
+      - name: Fact-check
+        run: node scripts/fact-check.js
+
+      - name: Build site
+        run: node scripts/build-site.js
+
+      # google-chrome-stable is pre-installed on ubuntu-latest runners.
+      - name: Build PDF (screen)
+        run: node scripts/build-pdf.js
+        env:
+          PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome-stable
+
+      - name: Build PDF (print / KDP)
+        run: node scripts/build-pdf.js --print
+        env:
+          PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome-stable
+
+      - name: Upload site
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: dist/site/
+
+      - name: Upload PDFs
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdfs
+          path: dist/pdf/
