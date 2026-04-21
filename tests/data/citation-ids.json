@@ -1,0 +1,26 @@
+[
+  {
+    "given": "## ledoux-1996\n\n- Author: Joseph LeDoux\n- Title: The Emotional Brain",
+    "then": ["ledoux-1996"]
+  },
+  {
+    "given": "- **damasio-1994**: Descartes' Error — Antonio Damasio",
+    "then": ["damasio-1994"]
+  },
+  {
+    "given": "## first-citation\n\nDetails.\n\n## second-citation\n\nMore details.",
+    "then": ["first-citation", "second-citation"]
+  },
+  {
+    "given": "No citations here, just prose and headings.\n\n### A subheading",
+    "then": []
+  },
+  {
+    "given": "## alpha\n\n- **beta**\n\n## gamma",
+    "then": ["alpha", "beta", "gamma"]
+  },
+  {
+    "given": "## sagan-1985\n\n- Author: Carl Sagan\n- Title: Contact\n- Year: 1985",
+    "then": ["sagan-1985"]
+  }
+]

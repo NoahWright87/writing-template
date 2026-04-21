@@ -16,7 +16,7 @@ npm run build           # fact-check + site + PDF in one shot
 ## Repo structure
 
 ```
-├── BIBLE.md                    ← Project vision, tone, canonical elements (fill this in)
+├── CANON.md                    ← Project vision, tone, canonical elements (fill this in)
 ├── AGENTS.md                   ← Agent instructions, project-specific rules (fill this in)
 ├── instructions.md             ← Full template guide and philosophy
 ├── specs/
@@ -66,7 +66,7 @@ node scripts/fact-check.js --report   # write fact-check-report.md instead of st
 
 See `instructions.md` Section 9 for the full forking guide. In short:
 
-1. Fill in `BIBLE.md` with project vision, tone, and canonical elements
+1. Fill in `CANON.md` with project vision, tone, and canonical elements
 2. Fill in `AGENTS.md` with project-specific agent instructions
 3. Create specs in `specs/concepts/`, `specs/characters/`, `specs/mechanisms/`
 4. Build `specs/research/citations.md` as specs are populated

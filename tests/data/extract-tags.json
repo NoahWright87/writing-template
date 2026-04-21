@@ -1,0 +1,41 @@
+[
+  {
+    "given": { "content": "Plain text with no tags at all.", "tagName": "spec-ref" },
+    "then": []
+  },
+  {
+    "given": { "content": "A factual claim. ::spec-ref[anxiety]", "tagName": "spec-ref" },
+    "then": ["anxiety"]
+  },
+  {
+    "given": { "content": "::spec-ref[foo] and ::spec-ref[bar] on the same line.", "tagName": "spec-ref" },
+    "then": ["foo", "bar"]
+  },
+  {
+    "given": { "content": "Padded value: ::spec-ref[ padded-id ]", "tagName": "spec-ref" },
+    "then": ["padded-id"]
+  },
+  {
+    "given": { "content": "::citation[ledoux-1996] is a citation tag, not a spec-ref.", "tagName": "spec-ref" },
+    "then": []
+  },
+  {
+    "given": { "content": "::citation[ledoux-1996] and ::citation[damasio-1994] in one sentence.", "tagName": "citation" },
+    "then": ["ledoux-1996", "damasio-1994"]
+  },
+  {
+    "given": { "content": "::open-question[How do we show the speed differential visually?]", "tagName": "open-question" },
+    "then": ["How do we show the speed differential visually?"]
+  },
+  {
+    "given": {
+      "content": "First ::spec-ref[concept-a] claim.\n\nSecond ::spec-ref[concept-b] claim across paragraphs.",
+      "tagName": "spec-ref"
+    },
+    "then": ["concept-a", "concept-b"]
+  },
+  {
+    "given": { "content": "::spec-ref[kebab-case-id] with a hyphenated id.", "tagName": "spec-ref" },
+    "then": ["kebab-case-id"]
+  }
+]

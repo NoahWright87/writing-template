@@ -29,7 +29,7 @@
 
 ## Session Startup Checklist
 
-1. Read `BIBLE.md` for project context
+1. Read `CANON.md` for project context
 2. Read this file for project-specific instructions
 3. Run `npm run fact-check` to see the current state of unverified claims
 4. Check `outline/series-overview.md` for the current outline state

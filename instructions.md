@@ -48,7 +48,7 @@ Every factual claim in a non-fiction project must be traceable to a spec, and ev
 your-book/
 │
 ├── TEMPLATE.md                        ← This file (remove or archive after forking)
-├── BIBLE.md                           ← Project-specific bible (created in fork)
+├── CANON.md                           ← Project-specific canon document (created in fork)
 ├── README.md                          ← Human-readable project intro
 ├── AGENTS.md                          ← Agent-specific instructions for this project
 │
@@ -306,13 +306,13 @@ To start a new book project from this template:
 
 1. Fork or copy this repo
 2. Delete or archive `TEMPLATE.md` (this file)
-3. Create `BIBLE.md` — the project-specific bible containing vision, tone, character bible, and content specs
+3. Create `CANON.md` — the project-specific canon document containing vision, tone, character canon, and content specs
 4. Create `AGENTS.md` — project-specific agent instructions (reference this template's Section 8 and extend it)
 5. Create `README.md` — human-readable intro to the project
 6. Populate `specs/_template.spec.md` with the canonical template from Section 3
 7. Begin creating specs in `specs/concepts/`, `specs/characters/`, `specs/mechanisms/` as appropriate
 8. Build `research/citations.md` as specs are populated
-9. Point a coding agent at `BIBLE.md` and `AGENTS.md` and begin
+9. Point a coding agent at `CANON.md` and `AGENTS.md` and begin
 
 ### What stays the same across all forks
 - Repo architecture (Section 2)
@@ -324,7 +324,7 @@ To start a new book project from this template:
 - Core agent rules (Section 8)
 
 ### What changes in each fork
-- `BIBLE.md` — entirely project-specific
+- `CANON.md` — entirely project-specific
 - `AGENTS.md` — extends the generic rules with project-specific constraints
 - `drafts/` subdirectory names — match the content types of the specific project
 - CSS/layout for site and PDF builds — match the visual design of the specific project

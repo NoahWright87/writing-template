@@ -1,6 +1,6 @@
-# [Project Name] — Bible
+# [Project Name] — Canon
 
-> **Placeholder.** Replace this file with your project-specific bible.
+> **Placeholder.** Replace this file with your project-specific canon document.
 > See `instructions.md` Section 9 for guidance on what to include.
 
 ---

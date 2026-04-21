@@ -23,6 +23,9 @@ jobs:
         env:
           PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
 
+      - name: Run tests
+        run: npm test
+
       - name: Fact-check
         run: node scripts/fact-check.js
 
