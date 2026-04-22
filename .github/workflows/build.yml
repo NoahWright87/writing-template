@@ -9,6 +9,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      pull-requests: write
+
     steps:
       - uses: actions/checkout@v4
 
@@ -44,13 +48,64 @@ jobs:
           PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome-stable
 
       - name: Upload site
+        id: upload-site
         uses: actions/upload-artifact@v4
         with:
           name: site
           path: dist/site/
 
       - name: Upload PDFs
+        id: upload-pdfs
         uses: actions/upload-artifact@v4
         with:
           name: pdfs
           path: dist/pdf/
+
+      # Posts a PR comment with artifact download links after a successful build.
+      # On subsequent builds the same comment is updated in place (identified by
+      # the hidden marker in the comment body) so the thread stays tidy.
+      - name: Comment build artifacts on PR
+        if: success() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        env:
+          SITE_URL: ${{ steps.upload-site.outputs.artifact-url }}
+          PDFS_URL: ${{ steps.upload-pdfs.outputs.artifact-url }}
+        with:
+          script: |
+            const marker = '<!-- build-artifacts-bot -->';
+            const sha = context.payload.pull_request.head.sha.slice(0, 7);
+            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+
+            const body = [
+              marker,
+              '### Build artifacts',
+              '',
+              `Commit \`${sha}\` · [View run ↗](${runUrl})`,
+              '',
+              `- 📄 **Site** — [download](${process.env.SITE_URL})`,
+              `- 📕 **PDFs** — [download](${process.env.PDFS_URL})`,
+            ].join('\n');
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+            });
+
+            const existing = comments.find(c => c.body.includes(marker));
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                body,
+              });
+            }
