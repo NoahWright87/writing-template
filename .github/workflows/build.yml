@@ -1,0 +1,164 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write       # push to gh-pages branch
+      pull-requests: write  # post / update PR comment
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # Skip downloading bundled Chromium — use the system Chrome below instead.
+      - name: Install dependencies
+        run: npm ci
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
+
+      - name: Run tests
+        run: npm test
+
+      - name: Fact-check
+        run: node scripts/fact-check.js
+
+      - name: Build site
+        run: node scripts/build-site.js
+
+      # google-chrome-stable is pre-installed on ubuntu-latest runners.
+      - name: Build PDF (screen)
+        run: node scripts/build-pdf.js
+        env:
+          PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome-stable
+
+      - name: Build PDF (print / KDP)
+        run: node scripts/build-pdf.js --print
+        env:
+          PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome-stable
+
+      - name: Upload site
+        id: upload-site
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: dist/site/
+
+      - name: Upload PDFs
+        id: upload-pdfs
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdfs
+          path: dist/pdf/
+
+      # Pushes the built site to the gh-pages branch.
+      # Main branch  → root of gh-pages (replaces root, preserves pr-* dirs)
+      # Pull request → pr-<number>/ subdirectory (PR preview)
+      #
+      # NOTE: enable GitHub Pages in repo Settings → Pages → Source: gh-pages branch
+      # before the first deployment. Only needs to be done once.
+      - name: Deploy to GitHub Pages
+        run: |
+          set -euo pipefail
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          TMP=$(mktemp -d)
+          cleanup() { git worktree remove --force "$TMP" 2>/dev/null || true; rm -rf "$TMP"; }
+          trap cleanup EXIT
+
+          if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
+            git fetch origin gh-pages:gh-pages
+            git worktree add "$TMP" gh-pages
+          else
+            git worktree add --orphan -b gh-pages "$TMP"
+          fi
+
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            DEST="pr-${{ github.event.number }}"
+            rm -rf "$TMP/$DEST"
+            mkdir -p "$TMP/$DEST"
+            cp -r dist/site/. "$TMP/$DEST/"
+          else
+            # Replace root content while leaving pr-* preview dirs intact
+            find "$TMP" -maxdepth 1 -mindepth 1 \
+              ! -name 'pr-*' ! -name '.git' ! -name '.nojekyll' \
+              -exec rm -rf {} + 2>/dev/null || true
+            cp -r dist/site/. "$TMP/"
+          fi
+
+          touch "$TMP/.nojekyll"
+
+          cd "$TMP"
+          git add -A
+
+          if git diff --staged --quiet; then
+            echo "No changes to deploy."
+          else
+            git commit -m "Deploy ${{ github.sha }}"
+            git push origin gh-pages
+          fi
+
+      # Posts (or updates) a single PR comment with the Pages preview URL and
+      # artifact download links. Identified by a hidden marker so it can be
+      # updated in place on subsequent builds.
+      - name: Comment build artifacts on PR
+        if: success() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        env:
+          SITE_URL: ${{ steps.upload-site.outputs.artifact-url }}
+          PDFS_URL: ${{ steps.upload-pdfs.outputs.artifact-url }}
+        with:
+          script: |
+            const marker = '<!-- build-artifacts-bot -->';
+            const sha    = context.payload.pull_request.head.sha.slice(0, 7);
+            const prNum  = context.payload.pull_request.number;
+            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const pagesUrl = `https://${context.repo.owner}.github.io/${context.repo.repo}/pr-${prNum}/`;
+
+            const body = [
+              marker,
+              '### Build artifacts',
+              '',
+              `Commit \`${sha}\` · [View run ↗](${runUrl})`,
+              '',
+              `**Preview:** ${pagesUrl}`,
+              '',
+              `- 📄 **Site** — [download zip](${process.env.SITE_URL})`,
+              `- 📕 **PDFs** — [download zip](${process.env.PDFS_URL})`,
+            ].join('\n');
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNum,
+            });
+
+            const existing = comments.find(c => c.body.includes(marker));
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNum,
+                body,
+              });
+            }

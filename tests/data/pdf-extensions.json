@@ -1,0 +1,34 @@
+[
+  {
+    "given": "::panel[Wide shot: the Meridian drifts through deep black.]",
+    "then": "<div class=\"panel\">Wide shot: the Meridian drifts through deep black.</div>"
+  },
+  {
+    "given": "::sidebar[The amygdala processes signals in roughly 12ms.]",
+    "then": "<aside class=\"sidebar\">The amygdala processes signals in roughly 12ms.</aside>"
+  },
+  {
+    "given": "::callout[The universe had been silent for a billion years.]",
+    "then": "<blockquote class=\"callout\">The universe had been silent for a billion years.</blockquote>"
+  },
+  {
+    "given": "::spec-ref[first-contact]",
+    "then": "<sup class=\"spec-ref\">[first-contact]</sup>"
+  },
+  {
+    "given": "::citation[sagan-1985]",
+    "then": "<sup class=\"citation\">[sagan-1985]</sup>"
+  },
+  {
+    "given": "::open-question[How do we show the speed differential?]",
+    "then": ""
+  },
+  {
+    "given": "No tags here, just prose.",
+    "then": "No tags here, just prose."
+  },
+  {
+    "given": "Inline ::spec-ref[foo] and ::citation[bar] together.",
+    "then": "Inline <sup class=\"spec-ref\">[foo]</sup> and <sup class=\"citation\">[bar]</sup> together."
+  }
+]

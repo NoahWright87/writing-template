@@ -1,0 +1,34 @@
+[
+  {
+    "given": { "html": "::panel[Wide shot: the Meridian drifts through deep black.]", "specMap": {}, "depth": 2 },
+    "then": "<div class=\"panel\">Wide shot: the Meridian drifts through deep black.</div>"
+  },
+  {
+    "given": { "html": "::sidebar[The amygdala processes signals in roughly 12ms.]", "specMap": {}, "depth": 2 },
+    "then": "<aside class=\"sidebar\">The amygdala processes signals in roughly 12ms.</aside>"
+  },
+  {
+    "given": { "html": "::callout[The universe had been silent for a billion years.]", "specMap": {}, "depth": 2 },
+    "then": "<blockquote class=\"callout\">The universe had been silent for a billion years.</blockquote>"
+  },
+  {
+    "given": { "html": "::open-question[How to show the speed differential in a single panel?]", "specMap": {}, "depth": 1 },
+    "then": "<span class=\"open-question\" title=\"Open question\">❓ How to show the speed differential in a single panel?</span>"
+  },
+  {
+    "given": { "html": "::spec-ref[first-contact]", "specMap": { "first-contact": "specs/concepts/first-contact.spec.html" }, "depth": 2 },
+    "then": "<a class=\"spec-ref\" href=\"../../specs/concepts/first-contact.spec.html\" title=\"Spec: first-contact\">[first-contact]</a>"
+  },
+  {
+    "given": { "html": "::spec-ref[missing-spec]", "specMap": {}, "depth": 1 },
+    "then": "<a class=\"spec-ref missing\" href=\"#\" title=\"Missing spec: missing-spec\">[missing-spec]</a>"
+  },
+  {
+    "given": { "html": "::citation[sagan-1985]", "specMap": {}, "depth": 2 },
+    "then": "<a class=\"citation\" href=\"../../specs/research/citations.html#sagan-1985\" title=\"Citation: sagan-1985\">[sagan-1985]</a>"
+  },
+  {
+    "given": { "html": "Before ::panel[A visual beat.] After", "specMap": {}, "depth": 1 },
+    "then": "Before <div class=\"panel\">A visual beat.</div> After"
+  }
+]

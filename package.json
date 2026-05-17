@@ -1,0 +1,21 @@
+{
+  "name": "book-publishing-template",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Markdown-based book publishing template with fact-checking and build pipeline",
+  "scripts": {
+    "fact-check": "node scripts/fact-check.js",
+    "fact-check:strict": "node scripts/fact-check.js --strict",
+    "fact-check:report": "node scripts/fact-check.js --report",
+    "build:site": "node scripts/build-site.js",
+    "build:pdf": "node scripts/build-pdf.js",
+    "build:pdf:print": "node scripts/build-pdf.js --print",
+    "test": "node --test tests/fact-check.test.js tests/extensions.test.js",
+    "build": "npm run fact-check && npm run build:site && npm run build:pdf"
+  },
+  "dependencies": {
+    "gray-matter": "^4.0.3",
+    "marked": "^12.0.0",
+    "puppeteer": "^22.0.0"
+  }
+}
