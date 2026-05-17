@@ -1,0 +1,65 @@
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 18px;
+  line-height: 1.75;
+  color: #1a1a1a;
+  background: #fafaf8;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+
+nav {
+  max-width: 720px;
+  margin: 0 auto 1.5rem;
+  font-family: system-ui, sans-serif;
+  font-size: 0.9rem;
+}
+
+main { max-width: 720px; margin: 0 auto; }
+
+h1, h2, h3, h4 { font-family: system-ui, sans-serif; line-height: 1.2; }
+a { color: #2563eb; }
+code { font-size: 0.875em; background: #f0f0ea; padding: 0.1em 0.3em; border-radius: 3px; }
+pre { background: #f0f0ea; padding: 1rem; overflow-x: auto; border-radius: 4px; }
+pre code { background: none; padding: 0; }
+
+.panel {
+  background: #e8f0fe;
+  border: 1px solid #c7d7fb;
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  font-family: system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-style: italic;
+}
+.panel::before { content: "Panel: "; font-weight: 700; font-style: normal; }
+
+.sidebar {
+  background: #f0f4f8;
+  border-left: 4px solid #2563eb;
+  padding: 0.75rem 1rem;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+}
+
+.callout {
+  background: #fff8e1;
+  border-left: 4px solid #f59e0b;
+  margin: 1.5rem 0;
+  padding: 0.75rem 1rem;
+  font-style: italic;
+}
+
+.spec-ref, .citation {
+  font-family: monospace;
+  font-size: 0.78em;
+  vertical-align: super;
+  text-decoration: none;
+  color: #7c3aed;
+}
+.spec-ref.missing { color: #dc2626; text-decoration: line-through; }
+
+.open-question { color: #d97706; font-size: 0.9em; font-family: system-ui, sans-serif; }
